@@ -1,0 +1,404 @@
+maxFrames 40
+nBatchSize 30
+nTrainPerEpoch 100000
+nTestPerEpoch 10000
+nDataLoaderThread 4
+max_epoch 500
+temporal_stride 2
+model models.SyncNetModelFBank
+nOut 1024
+lr 0.001
+lr_decay 0.95
+alphaC 1.0
+alphaI 1.0
+initial_model 
+save_path data/exp01
+train_list data/train.txt
+verify_list data/test.txt
+test_list voxceleb/test_list.txt
+test_path voxceleb/voxceleb1
+eval False
+Model data/exp01/model/model000000006.model loaded from previous state!
+Reading data ...
+Evalmode True - 180 clips
+Reading done.
+2021-05-02 11:40:19 7 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 11:42:04 data/exp01: IT 7, LR 0.000074, TACC 23.98, TLOSS 5.699378, VACC 11.67, VLOSS 5.940583
+
+2021-05-02 11:42:04 Saving model 7
+
+2021-05-02 11:42:04 8 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 11:43:41 data/exp01: IT 8, LR 0.000070, TACC 24.26, TLOSS 5.617698, VACC 7.78, VLOSS 5.903387
+
+2021-05-02 11:43:41 Saving model 8
+
+2021-05-02 11:43:42 9 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 11:45:18 data/exp01: IT 9, LR 0.000066, TACC 27.13, TLOSS 5.539715, VACC 9.44, VLOSS 5.881163
+
+2021-05-02 11:45:18 Saving model 9
+
+2021-05-02 11:45:18 10 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 11:46:54 data/exp01: IT 10, LR 0.000063, TACC 28.15, TLOSS 5.491572, VACC 7.78, VLOSS 5.854946
+
+2021-05-02 11:46:54 Saving model 10
+
+2021-05-02 11:46:54 11 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 11:48:31 data/exp01: IT 11, LR 0.000060, TACC 28.24, TLOSS 5.427074, VACC 8.89, VLOSS 5.836131
+
+2021-05-02 11:48:31 Saving model 11
+
+2021-05-02 11:48:31 12 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 11:50:09 data/exp01: IT 12, LR 0.000057, TACC 30.74, TLOSS 5.363943, VACC 10.00, VLOSS 5.837366
+
+2021-05-02 11:50:09 Saving model 12
+
+2021-05-02 11:50:09 13 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 11:51:47 data/exp01: IT 13, LR 0.000054, TACC 32.04, TLOSS 5.317212, VACC 10.56, VLOSS 5.799875
+
+2021-05-02 11:51:47 Saving model 13
+
+2021-05-02 11:51:47 14 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 11:53:23 data/exp01: IT 14, LR 0.000051, TACC 33.33, TLOSS 5.269296, VACC 11.67, VLOSS 5.795617
+
+2021-05-02 11:53:23 Saving model 14
+
+2021-05-02 11:53:23 15 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 11:54:59 data/exp01: IT 15, LR 0.000049, TACC 35.28, TLOSS 5.224154, VACC 9.44, VLOSS 5.781105
+
+2021-05-02 11:54:59 Saving model 15
+
+2021-05-02 11:55:00 16 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 11:56:39 data/exp01: IT 16, LR 0.000046, TACC 38.43, TLOSS 5.197500, VACC 11.67, VLOSS 5.790043
+
+2021-05-02 11:56:39 Saving model 16
+
+2021-05-02 11:56:40 17 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 11:58:17 data/exp01: IT 17, LR 0.000044, TACC 40.28, TLOSS 5.157680, VACC 10.56, VLOSS 5.770346
+
+2021-05-02 11:58:17 Saving model 17
+
+2021-05-02 11:58:17 18 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 11:59:56 data/exp01: IT 18, LR 0.000042, TACC 40.83, TLOSS 5.116793, VACC 11.67, VLOSS 5.758675
+
+2021-05-02 11:59:56 Saving model 18
+
+2021-05-02 11:59:56 19 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:01:33 data/exp01: IT 19, LR 0.000040, TACC 43.24, TLOSS 5.084963, VACC 12.22, VLOSS 5.732254
+
+2021-05-02 12:01:33 Saving model 19
+
+2021-05-02 12:01:33 20 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:03:10 data/exp01: IT 20, LR 0.000038, TACC 44.17, TLOSS 5.065115, VACC 11.11, VLOSS 5.724490
+
+2021-05-02 12:03:10 Saving model 20
+
+2021-05-02 12:03:11 21 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:04:47 data/exp01: IT 21, LR 0.000036, TACC 45.93, TLOSS 5.035181, VACC 11.67, VLOSS 5.726816
+
+2021-05-02 12:04:47 Saving model 21
+
+2021-05-02 12:04:47 22 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:06:23 data/exp01: IT 22, LR 0.000034, TACC 44.44, TLOSS 5.038269, VACC 13.33, VLOSS 5.735793
+
+2021-05-02 12:06:23 Saving model 22
+
+2021-05-02 12:06:23 23 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:08:01 data/exp01: IT 23, LR 0.000032, TACC 47.78, TLOSS 4.986685, VACC 11.11, VLOSS 5.727139
+
+2021-05-02 12:08:01 Saving model 23
+
+2021-05-02 12:08:02 24 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:09:39 data/exp01: IT 24, LR 0.000031, TACC 50.19, TLOSS 4.956273, VACC 10.56, VLOSS 5.724318
+
+2021-05-02 12:09:39 Saving model 24
+
+2021-05-02 12:09:40 25 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:11:18 data/exp01: IT 25, LR 0.000029, TACC 49.44, TLOSS 4.957598, VACC 10.00, VLOSS 5.752740
+
+2021-05-02 12:11:18 Saving model 25
+
+2021-05-02 12:11:19 26 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:12:54 data/exp01: IT 26, LR 0.000028, TACC 53.43, TLOSS 4.908468, VACC 12.22, VLOSS 5.732996
+
+2021-05-02 12:12:54 Saving model 26
+
+2021-05-02 12:12:55 27 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:14:33 data/exp01: IT 27, LR 0.000026, TACC 51.67, TLOSS 4.903551, VACC 12.78, VLOSS 5.717021
+
+2021-05-02 12:14:33 Saving model 27
+
+2021-05-02 12:14:33 28 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:16:09 data/exp01: IT 28, LR 0.000025, TACC 53.43, TLOSS 4.889341, VACC 13.33, VLOSS 5.703890
+
+2021-05-02 12:16:09 Saving model 28
+
+2021-05-02 12:16:10 29 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:17:51 data/exp01: IT 29, LR 0.000024, TACC 54.07, TLOSS 4.889636, VACC 10.00, VLOSS 5.697648
+
+2021-05-02 12:17:51 Saving model 29
+
+2021-05-02 12:17:51 30 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:19:32 data/exp01: IT 30, LR 0.000023, TACC 54.44, TLOSS 4.846478, VACC 10.56, VLOSS 5.695782
+
+2021-05-02 12:19:32 Saving model 30
+
+2021-05-02 12:19:32 31 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:21:12 data/exp01: IT 31, LR 0.000021, TACC 55.37, TLOSS 4.841007, VACC 13.89, VLOSS 5.698597
+
+2021-05-02 12:21:12 Saving model 31
+
+2021-05-02 12:21:13 32 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:22:54 data/exp01: IT 32, LR 0.000020, TACC 57.50, TLOSS 4.825478, VACC 12.22, VLOSS 5.713990
+
+2021-05-02 12:22:54 Saving model 32
+
+2021-05-02 12:22:54 33 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:24:36 data/exp01: IT 33, LR 0.000019, TACC 57.78, TLOSS 4.808779, VACC 12.22, VLOSS 5.722750
+
+2021-05-02 12:24:36 Saving model 33
+
+2021-05-02 12:24:37 34 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:26:16 data/exp01: IT 34, LR 0.000018, TACC 56.67, TLOSS 4.813567, VACC 13.33, VLOSS 5.701719
+
+2021-05-02 12:26:16 Saving model 34
+
+2021-05-02 12:26:17 35 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:27:57 data/exp01: IT 35, LR 0.000017, TACC 61.48, TLOSS 4.779328, VACC 12.22, VLOSS 5.675547
+
+2021-05-02 12:27:57 Saving model 35
+
+2021-05-02 12:27:58 36 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:29:38 data/exp01: IT 36, LR 0.000017, TACC 60.28, TLOSS 4.762504, VACC 13.33, VLOSS 5.708271
+
+2021-05-02 12:29:38 Saving model 36
+
+2021-05-02 12:29:38 37 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:31:17 data/exp01: IT 37, LR 0.000016, TACC 59.54, TLOSS 4.743987, VACC 14.44, VLOSS 5.698756
+
+2021-05-02 12:31:17 Saving model 37
+
+2021-05-02 12:31:18 38 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:32:58 data/exp01: IT 38, LR 0.000015, TACC 62.22, TLOSS 4.748242, VACC 12.78, VLOSS 5.708376
+
+2021-05-02 12:32:58 Saving model 38
+
+2021-05-02 12:32:58 39 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:34:40 data/exp01: IT 39, LR 0.000014, TACC 63.15, TLOSS 4.728916, VACC 9.44, VLOSS 5.719511
+
+2021-05-02 12:34:40 Saving model 39
+
+2021-05-02 12:34:40 40 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:36:22 data/exp01: IT 40, LR 0.000014, TACC 61.02, TLOSS 4.717377, VACC 13.33, VLOSS 5.695995
+
+2021-05-02 12:36:22 Saving model 40
+
+2021-05-02 12:36:22 41 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:38:02 data/exp01: IT 41, LR 0.000013, TACC 60.37, TLOSS 4.722151, VACC 10.56, VLOSS 5.706651
+
+2021-05-02 12:38:02 Saving model 41
+
+2021-05-02 12:38:02 42 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:39:46 data/exp01: IT 42, LR 0.000012, TACC 63.15, TLOSS 4.707366, VACC 11.11, VLOSS 5.725698
+
+2021-05-02 12:39:46 Saving model 42
+
+2021-05-02 12:39:47 43 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:41:28 data/exp01: IT 43, LR 0.000012, TACC 64.35, TLOSS 4.691257, VACC 14.44, VLOSS 5.700981
+
+2021-05-02 12:41:28 Saving model 43
+
+2021-05-02 12:41:28 44 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:43:09 data/exp01: IT 44, LR 0.000011, TACC 63.98, TLOSS 4.695508, VACC 12.22, VLOSS 5.699131
+
+2021-05-02 12:43:09 Saving model 44
+
+2021-05-02 12:43:10 45 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:44:51 data/exp01: IT 45, LR 0.000010, TACC 63.15, TLOSS 4.682312, VACC 12.78, VLOSS 5.673533
+
+2021-05-02 12:44:51 Saving model 45
+
+2021-05-02 12:44:52 46 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:46:32 data/exp01: IT 46, LR 0.000010, TACC 63.52, TLOSS 4.691938, VACC 11.11, VLOSS 5.705549
+
+2021-05-02 12:46:32 Saving model 46
+
+2021-05-02 12:46:32 47 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:48:13 data/exp01: IT 47, LR 0.000009, TACC 65.83, TLOSS 4.660483, VACC 11.67, VLOSS 5.711088
+
+2021-05-02 12:48:13 Saving model 47
+
+2021-05-02 12:48:13 48 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
+
+Content loss 1.000000 Identity loss 1.000000
+
+2021-05-02 12:49:52 data/exp01: IT 48, LR 0.000009, TACC 63.06, TLOSS 4.680130, VACC 10.56, VLOSS 5.688233
+
+2021-05-02 12:49:52 Saving model 48
+
+2021-05-02 12:49:53 49 Start Iteration
+Content loss 1.000000 Identity loss 1.000000
