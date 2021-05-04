@@ -22,18 +22,18 @@ def count_mp4(filename):
 	cap = cv2.VideoCapture(filename)
 	total_frames = cap.get(7)
 	return [total_frames, total_frames]
-	counted_frames = 0
-	while True:
-		ret, image = cap.read()
-		if ret == 0:
-			break
-		else:
-			counted_frames += 1
-	cap.release()
-
-	if total_frames != counted_frames:
-		return [total_frames, counted_frames]
-	return [total_frames, counted_frames]
+	# counted_frames = 0
+	# while True:
+	# 	ret, image = cap.read()
+	# 	if ret == 0:
+	# 		break
+	# 	else:
+	# 		counted_frames += 1
+	# cap.release()
+	#
+	# if total_frames != counted_frames:
+	# 	return [total_frames, counted_frames]
+	# return [total_frames, counted_frames]
 
 
 def get_meta():

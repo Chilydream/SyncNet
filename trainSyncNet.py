@@ -26,7 +26,7 @@ parser.add_argument('--nDataLoaderThread', type=int, default=4, help='')
 parser.add_argument('--goon', type=bool, default=False, help='Train from zero or Continue last training.' )
 
 ## Training details
-parser.add_argument('--max_epoch', type=int, default=500, help='Maximum number of epochs')
+parser.add_argument('--max_epoch', type=int, default=100, help='Maximum number of epochs')
 parser.add_argument('--temporal_stride', type=int, default=1, help='')
 
 ## Model definition
@@ -119,9 +119,9 @@ start_time = time.time()
 # trainLoader = DatasetLoader(args.train_list, nPerEpoch=args.nTrainPerEpoch, **vars(args))
 # valLoader = DatasetLoader(args.verify_list, nPerEpoch=args.nTestPerEpoch, evalmode=True, **vars(args))
 trainLoader = MyDataLoader(args.train_list, args.nBatchSize)
-valLoader = MyDataLoader(args.verify_list, args.nBatchSize)
+valLoader = MyDataLoader(args.verify_list, args.nBatchSize, True)
 end_time = time.time()
-print('Reading done. Cost %.2f seconds.'%((end_time-start_time)/1000))
+print('Reading done. Cost %.0f seconds.'%(end_time-start_time))
 
 # ==================== CHECK SPK ====================
 
