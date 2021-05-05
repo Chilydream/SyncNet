@@ -16,9 +16,9 @@ from sklearn import metrics
 from DatasetLoader import DatasetLoader, MyDataLoader
 
 parser = argparse.ArgumentParser(description="TrainArgs")
-# python -u trainSyncNet.py --temporal_stride 2 --nBatchSize 36 --save_path data/exp02
+# python -u trainSyncNet.py --nBatchSize 30 --save_path data/exp04
 ## Data loader
-parser.add_argument('--maxFrames', type=int, default=40, help='')
+parser.add_argument('--maxFrames', type=int, default=34, help='')
 parser.add_argument('--nBatchSize', type=int, default=30, help='')
 parser.add_argument('--nTrainPerEpoch', type=int, default=100000, help='')
 parser.add_argument('--nTestPerEpoch', type=int, default=10000, help='')
@@ -35,7 +35,7 @@ parser.add_argument('--model', type=str, default="models.SyncNetModelFBank", hel
 parser.add_argument('--nOut', type=int, default=1024, help='Embedding size in the last FC layer')
 
 ## Learning rates
-parser.add_argument('--lr', type=float, default=0.001, help='Learning rate')
+parser.add_argument('--lr', type=float, default=0.01, help='Learning rate')
 parser.add_argument("--lr_decay", type=float, default=0.95, help='Learning rate decay every epoch')
 
 ## Joint training params
