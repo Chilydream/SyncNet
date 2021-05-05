@@ -142,14 +142,13 @@ class SyncNet(nn.Module):
 
 			telapsed = time.time()-tstart
 
-			if counter%5==0:
-				sys.stdout.write("\nProc (%d/%d): %.3fHz "%(index, loader.nFiles, stepsize/telapsed))
-				sys.stdout.write("Ls %.3f SYT1 %2.3f%% "%(loss/counter, top1_sy/counter))
-				sys.stdout.write("IDT1 %2.3f%% "%(top1_id/counter))
+			sys.stdout.write("\rProc (%d/%d): %.3fHz "%(index, loader.nFiles, stepsize/telapsed))
+			sys.stdout.write("Ls %.3f SYT1 %2.3f%% "%(loss/counter, top1_sy/counter))
+			sys.stdout.write("IDT1 %2.3f%% "%(top1_id/counter))
 
-				# ==================== CALCULATE LOSSES ====================
+			# ==================== CALCULATE LOSSES ====================
 
-				sys.stdout.flush()
+			sys.stdout.flush()
 
 			index += stepsize
 
