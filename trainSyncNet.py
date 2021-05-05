@@ -16,21 +16,22 @@ from sklearn import metrics
 from DatasetLoader import DatasetLoader, MyDataLoader
 
 parser = argparse.ArgumentParser(description="TrainArgs")
-
+# python -u trainSyncNet.py --temporal_stride 2 --nBatchSize 36 --save_path data/exp02
 ## Data loader
-parser.add_argument('--maxFrames', type=int, default=30, help='')
+parser.add_argument('--maxFrames', type=int, default=40, help='')
 parser.add_argument('--nBatchSize', type=int, default=30, help='')
 parser.add_argument('--nTrainPerEpoch', type=int, default=100000, help='')
 parser.add_argument('--nTestPerEpoch', type=int, default=10000, help='')
 parser.add_argument('--nDataLoaderThread', type=int, default=4, help='')
 parser.add_argument('--goon', type=bool, default=False, help='Train from zero or Continue last training.' )
+parser.add_argument('--hard_eval', type=bool, default=False)
 
 ## Training details
 parser.add_argument('--max_epoch', type=int, default=100, help='Maximum number of epochs')
 parser.add_argument('--temporal_stride', type=int, default=1, help='')
 
 ## Model definition
-parser.add_argument('--model', type=str, default="", help='Model name')
+parser.add_argument('--model', type=str, default="models.SyncNetModelFBank", help='Model name')
 parser.add_argument('--nOut', type=int, default=1024, help='Embedding size in the last FC layer')
 
 ## Learning rates
@@ -119,7 +120,7 @@ start_time = time.time()
 # trainLoader = DatasetLoader(args.train_list, nPerEpoch=args.nTrainPerEpoch, **vars(args))
 # valLoader = DatasetLoader(args.verify_list, nPerEpoch=args.nTestPerEpoch, evalmode=True, **vars(args))
 trainLoader = MyDataLoader(args.train_list, args.nBatchSize)
-valLoader = MyDataLoader(args.verify_list, args.nBatchSize, True)
+valLoader = MyDataLoader(args.verify_list, args.nBatchSize, not args.hard_eval)
 end_time = time.time()
 print('Reading done. Cost %.0f seconds.'%(end_time-start_time))
 
