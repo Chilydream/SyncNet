@@ -1,14 +1,23 @@
 import pickle
 import numpy as np
+import torch
+import torchsnooper
+import torch.nn.functional as F
+import torch.nn as nn
 
-total_cnt = 220
-pool = []
-for i in range(total_cnt):
-	pool.extend([i]*5)
 
-epoch_num = 100000
-repeat_num = 0
-for i in range(epoch_num):
-	batch = np.random.choice(pool, 30, False)
-	repeat_num += len(batch)-len(set(batch))
-print(repeat_num)
+class LossScale(nn.Module):
+	def __init__(self, init_w=10.0, init_b=-5.0):
+		super(LossScale, self).__init__()
+
+		self.wI = nn.Parameter(torch.tensor(init_w))
+		self.bI = nn.Parameter(torch.tensor(init_b))
+
+		self.wC = nn.Parameter(torch.tensor(init_w))
+		self.bC = nn.Parameter(torch.tensor(init_b))
+
+
+a = LossScale()
+b = LossScale()
+for pname, p in a.named_parameters():
+	print(pname, p)

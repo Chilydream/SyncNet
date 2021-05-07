@@ -32,7 +32,7 @@ def cosine_similarity(x, y):
 
 
 S = SyncNet(model="models.SyncNetModelFBank", maxFrames=40, learning_rate=0.001, temporal_stride=2)
-S.loadParameters("data/model000000100.model")
+S.loadParameters("data/exp_04.model")
 S.eval()
 
 root_dir = '/data2/Downloads/wav'
@@ -55,8 +55,8 @@ for data_pair in valid_list:
 	else:
 		valid_dict[index].append(wavpath)
 
-if os.path.exists('register_dict.npy'):
-	register_dict = np.load('register_dict.npy', allow_pickle=True).item()
+if os.path.exists('npy/register_dict.npy'):
+	register_dict = np.load('npy/register_dict.npy', allow_pickle=True).item()
 else:
 	register_dict = dict()
 	for people in tqdm(train_dict.keys()):
@@ -71,7 +71,7 @@ else:
 			out_id = np.average(out_id, axis=1)
 			id_features.append(out_id)
 		register_dict[people] = np.average(id_features, axis=0)
-	np.save('register_dict.npy', register_dict)
+	np.save('npy/register_dict.npy', register_dict)
 
 
 def recog_eval():
@@ -100,9 +100,9 @@ def recog_eval():
 
 
 def veri_eval(threshold):
-	if os.path.exists('match_list.npy') and os.path.exists('unmatch_list.npy'):
-		match_list = np.load('match_list.npy')
-		unmatch_list = np.load('unmatch_list.npy')
+	if os.path.exists('npy/match_list.npy') and os.path.exists('npy/unmatch_list.npy'):
+		match_list = np.load('npy/match_list.npy')
+		unmatch_list = np.load('npy/unmatch_list.npy')
 	else:
 		match_list = []
 		unmatch_list = []
@@ -120,8 +120,8 @@ def veri_eval(threshold):
 					match_list.append(sim)
 				else:
 					unmatch_list.append(sim)
-		np.save('match_list.npy', match_list)
-		np.save('unmatch_list.npy', unmatch_list)
+		np.save('npy/match_list.npy', match_list)
+		np.save('npy/unmatch_list.npy', unmatch_list)
 	tn, fp, fn, tp = 0, 0, 0, 0
 	for i in match_list:
 		if i<threshold:
@@ -139,10 +139,10 @@ def veri_eval(threshold):
 	fnr = fn*100/(tp+fn)
 	print('ACC: %.3f%%    TPR: %.3f%%    FPR: %.3f%%    FNR: %.3f%%'%(acc, tpr, fpr, fnr))
 
-# recog_eval()
-# 等错误率 FPR==FNR==35.7%
-# 阈值为 0.833
+
+# exp03: 等错误率 FPR==FNR==35.7% 阈值为 0.833
+# exp04: 等错误率 FPR==FNR==35.2% 阈值为 0.816
 for i in range(0, 10):
-	threshold = 0.83+(i/1000)
+	threshold = 0.81+(i/1000)
 	print('Threshold:%.3f'%threshold)
 	veri_eval(threshold)

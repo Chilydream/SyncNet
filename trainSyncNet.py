@@ -16,19 +16,19 @@ from sklearn import metrics
 from DatasetLoader import DatasetLoader, MyDataLoader
 
 parser = argparse.ArgumentParser(description="TrainArgs")
-# python -u trainSyncNet.py --nBatchSize 30 --save_path data/exp04
+# python -u trainSyncNet.py --temporal_stride 1 --nOut 256 --save_path data/exp06
 ## Data loader
 parser.add_argument('--maxFrames', type=int, default=34, help='')
 parser.add_argument('--nBatchSize', type=int, default=30, help='')
 parser.add_argument('--nTrainPerEpoch', type=int, default=100000, help='')
 parser.add_argument('--nTestPerEpoch', type=int, default=10000, help='')
 parser.add_argument('--nDataLoaderThread', type=int, default=4, help='')
-parser.add_argument('--goon', type=bool, default=False, help='Train from zero or Continue last training.' )
+parser.add_argument('--goon', action='store_true', help='Train from zero or Continue last training.' )
 parser.add_argument('--hard_eval', type=bool, default=False)
 
 ## Training details
-parser.add_argument('--max_epoch', type=int, default=100, help='Maximum number of epochs')
-parser.add_argument('--temporal_stride', type=int, default=1, help='')
+parser.add_argument('--max_epoch', type=int, default=200, help='Maximum number of epochs')
+parser.add_argument('--temporal_stride', type=int, default=2, help='')
 
 ## Model definition
 parser.add_argument('--model', type=str, default="models.SyncNetModelFBank", help='Model name')
@@ -41,6 +41,7 @@ parser.add_argument("--lr_decay", type=float, default=0.95, help='Learning rate 
 ## Joint training params
 parser.add_argument('--alphaC', type=float, default=1.0, help='Sync weight')
 parser.add_argument('--alphaI', type=float, default=1.0, help='Identity weight')
+parser.add_argument('--alphaR', type=float, default=0, help='Regular weight')
 
 ## Load and save
 parser.add_argument('--initial_model', type=str, default="", help='Initial model weights')
@@ -103,7 +104,7 @@ if args.goon:
 
 	for ii in range(0, it-1):
 		clr = s.updateLearningRate(args.lr_decay)
-
+	print(clr[0])
 # ==================== EVAL ====================
 
 if args.eval == True:
@@ -117,10 +118,10 @@ if args.eval == True:
 
 print('Reading data ...')
 start_time = time.time()
-# trainLoader = DatasetLoader(args.train_list, nPerEpoch=args.nTrainPerEpoch, **vars(args))
-# valLoader = DatasetLoader(args.verify_list, nPerEpoch=args.nTestPerEpoch, evalmode=True, **vars(args))
-trainLoader = MyDataLoader(args.train_list, args.nBatchSize)
-valLoader = MyDataLoader(args.verify_list, args.nBatchSize, not args.hard_eval)
+trainLoader = DatasetLoader(args.train_list, nPerEpoch=args.nTrainPerEpoch, maxQueueSize=30, **vars(args))
+valLoader = DatasetLoader(args.verify_list, nPerEpoch=args.nTestPerEpoch, evalmode=True, **vars(args))
+# trainLoader = MyDataLoader(args.train_list, args.nBatchSize)
+# valLoader = MyDataLoader(args.verify_list, args.nBatchSize, not args.hard_eval)
 end_time = time.time()
 print('Reading done. Cost %.0f seconds.'%(end_time-start_time))
 
@@ -134,6 +135,7 @@ while (1):
 	loss, trainacc = s.train_network(trainLoader, evalmode=False, alpI=args.alphaI, alpC=args.alphaC)
 	valloss, valacc = s.train_network(valLoader, evalmode=True)
 
+	s.disentangle_step(trainLoader)
 	print(time.strftime("%Y-%m-%d %H:%M:%S"), "%s: IT %d, LR %f, TACC %2.2f, TLOSS %f, VACC %2.2f, VLOSS %f\n"%(
 		args.save_path, it, max(clr), trainacc, loss, valacc, valloss))
 	scorefile.write(

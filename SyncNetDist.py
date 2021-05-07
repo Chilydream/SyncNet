@@ -6,6 +6,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import sys, os, random, time, pdb, numpy, importlib
+
+import torchsnooper
+
 from dataLoader import loadWAV
 from accuracy import accuracy
 
@@ -23,12 +26,14 @@ class LossScale(nn.Module):
 
 class SyncNet(nn.Module):
 
-	def __init__(self, model=None, maxFrames=200, learning_rate=0.01, nOut=1024, temporal_stride=1, **kwargs):
+	def __init__(self, model=None, maxFrames=200, learning_rate=0.01, nOut=1024, temporal_stride=1,
+	             disentangle_step=10, **kwargs):
 		# nout指的是embedding的维数
 		super(SyncNet, self).__init__()
 
 		SyncNetModel = importlib.import_module(model).__getattribute__("SyncNetModel")
 
+		self.learning_rate = learning_rate
 		self.__S__ = SyncNetModel(nOut=nOut, stride=temporal_stride).cuda()
 		self.__L__ = LossScale().cuda()
 
@@ -36,22 +41,114 @@ class SyncNet(nn.Module):
 
 		self.__max_frames__ = maxFrames
 
-	def sync_loss(self, out_v, out_a, criterion):
+	def disentangle_step(self, loader):
+		criterion = torch.nn.CrossEntropyLoss()
+		self.__S__.eval()
+		self.__L__.eval()
+		id2content_L = LossScale().cuda()
+		content2id_L = LossScale().cuda()
+		dis_para = []
+		for pname, p in id2content_L.named_parameters():
+			dis_para.append(p)
+		for pname, p in content2id_L.named_parameters():
+			dis_para.append(p)
+		dis_optim = optim.SGD(dis_para, lr=0.01, momentum=0.9, weight_decay=1e-5)
+		for data in loader:
+			data_v, data_a = data
+			# data_a 的形状是（batch，max_audio）
+			# data_v 的形状是（batch，3，max_frames，w，h）
+
+			# ==================== FORWARD PASS ====================
+			out_a, out_A = self.__S__.forward_aud(data_a.cuda())
+			out_v, out_V = self.__S__.forward_vid(data_v.cuda())
+			# out_a 和 out_v 代表的是内容特征
+			# out_A 和 out_V 代表的是身份特征
+
+			time_size = out_V.size()[2]
+			# 使用 id信息去找 content
+			loss_id2content = self.sync_loss(out_V, out_v, criterion, id2content_L)[0]
+
+			# 使用 content信息去找 id
+			stepsize = loader.batch_size
+			label_id = torch.arange(stepsize).cuda()
+
+			ri = random.randint(0, time_size-1)
+			out_AA = torch.mean(out_A, 2, keepdim=True)
+			out_aA = out_a[:, :, [ri]]
+
+			idoutput = F.cosine_similarity(out_aA.expand(-1, -1, stepsize),
+			                               out_AA.expand(-1, -1, stepsize).transpose(0, 2))\
+			           *content2id_L.wC+content2id_L.bC
+
+			loss_content2id = criterion(idoutput, label_id)
+			whole_loss = loss_content2id+loss_id2content
+			whole_loss.backward()
+			dis_optim.step()
+		content2id_L.eval()
+		id2content_L.eval()
+		self.__S__.train()
+		self.__L__.train()
+		for data in loader:
+			data_v, data_a = data
+			out_a, out_A = self.__S__.forward_aud(data_a.cuda())
+			out_v, out_V = self.__S__.forward_vid(data_v.cuda())
+			# out_a 和 out_v 代表的是内容特征
+			# out_A 和 out_V 代表的是身份特征
+
+			time_size = out_V.size()[2]
+			# 使用 id信息去找 content
+			loss_id2content = self.sync_loss(out_V, out_v, criterion, id2content_L, dis2=True)
+
+			# 使用 content信息去找 id
+			stepsize = loader.batch_size
+			label_id = torch.arange(stepsize).cuda()
+
+			ri = random.randint(0, time_size-1)
+			out_AA = torch.mean(out_A, 2, keepdim=True)
+			out_aA = out_a[:, :, [ri]]
+
+			idoutput = F.cosine_similarity(out_aA.expand(-1, -1, stepsize),
+			                               out_AA.expand(-1, -1, stepsize).transpose(0, 2))\
+			           *content2id_L.wC+content2id_L.bC
+
+			loss_content2id = idoutput.std()
+			whole_loss = loss_content2id+loss_id2content
+			whole_loss.backward()
+			self.__optimizer__.step()
+
+	def sync_loss(self, out_v, out_a, criterion, L, dis2=False):
 
 		batch_size = out_a.size()[0]
+		feature_size = out_a.size()[1]
 		time_size = out_a.size()[2]
+		merge_size = (time_size-1)//3+1
 
-		label = torch.arange(time_size).cuda()
+		label = torch.arange(merge_size).cuda()
 
 		nloss = 0
 		prec1 = 0
 
 		for ii in range(0, batch_size):
 			ft_v = out_v[[ii], :, :].transpose(2, 0)
+			# ft_v = (15, 1024, 1)
 			ft_a = out_a[[ii], :, :].transpose(2, 0)
-			output = F.cosine_similarity(ft_v.expand(-1, -1, time_size),
-			                             ft_a.expand(-1, -1, time_size).transpose(0, 2))*self.__L__.wC+self.__L__.bC
-			p1, p5 = accuracy(output.detach().cpu(), label.detach().cpu(), topk=(1, 5))
+			# ft_a = (15, 1024, 1)
+			ft_v_merge = torch.zeros(((time_size-1)//3+1, feature_size, 1), dtype=torch.float32).cuda()
+			ft_a_merge = torch.zeros(((time_size-1)//3+1, feature_size, 1), dtype=torch.float32).cuda()
+			for itime in range(0, time_size):
+				ft_v_merge[(itime-1)//3] += ft_v[itime]
+				ft_a_merge[(itime-1)//3] += ft_a[itime]
+			# output = F.cosine_similarity(ft_v.expand(-1, -1, time_size),
+			#                              ft_a.expand(-1, -1, time_size).transpose(0, 2)) \
+			#          *self.__L__.wC+self.__L__.bC
+			output = F.cosine_similarity(ft_v_merge.expand(-1, -1, merge_size),
+			                             ft_a_merge.expand(-1, -1, merge_size).transpose(0, 2)) \
+			         *L.wC+L.bC
+			if dis2:
+				dumb_score = output.std()
+				return dumb_score
+			# output = (15, 15)
+			p1 = accuracy(output.detach().cpu(), label.detach().cpu(), topk=(1,))[0]
 
 			nloss += criterion(output, label)
 			prec1 += p1
@@ -61,7 +158,7 @@ class SyncNet(nn.Module):
 
 		return nloss, prec1
 
-	def train_network(self, loader=None, evalmode=None, alpC=1.0, alpI=1.0):
+	def train_network(self, loader=None, evalmode=None, alpC=1.0, alpI=1.0, alpR=1.0):
 
 		print('Content loss %f Identity loss %f'%(alpC, alpI))
 
@@ -116,19 +213,26 @@ class SyncNet(nn.Module):
 			out_VA = out_V[:, :, [ri]]
 
 			# sync loss and accuracy
-			nloss_sy, p1s = self.sync_loss(out_v, out_a, criterion)
+			nloss_sy, p1s = self.sync_loss(out_v, out_a, criterion, self.__L__)
 
 			# identity loss and accuracy
 			idoutput = F.cosine_similarity(out_VA.expand(-1, -1, stepsize),
-			                               out_AA.expand(-1, -1, stepsize).transpose(0, 2))*self.__L__.wI+self.__L__.bI
+			                               out_AA.expand(-1, -1, stepsize).transpose(0, 2))\
+			           *self.__L__.wI+self.__L__.bI
 
 			nloss_id = criterion(idoutput, label_id)
 
-			p1i, p5i = accuracy(idoutput.detach().cpu(), label_id.detach().cpu(), topk=(1, 2))
+			p1i = accuracy(idoutput.detach().cpu(), label_id.detach().cpu(), topk=(1,))[0]
 
+			# A_norm = torch.abs(1-out_A.norm(2, dim=1)).mean()
+			# a_norm = torch.abs(1-out_a.norm(2, dim=1)).mean()
+			# V_norm = torch.abs(1-out_V.norm(2, dim=1)).mean()
+			# v_norm = torch.abs(1-out_v.norm(2, dim=1)).mean()
+			# reg_loss = A_norm+a_norm+V_norm+v_norm
 			# ==================== Divergence Loss ====================
 
 			nloss = alpC*nloss_sy+alpI*nloss_id
+			# nloss = alpC*nloss_sy + alpI*nloss_id + alpR*reg_loss
 
 			if not evalmode:
 				nloss.backward()
