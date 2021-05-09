@@ -25,6 +25,7 @@ parser.add_argument('--nTestPerEpoch', type=int, default=10000, help='')
 parser.add_argument('--nDataLoaderThread', type=int, default=4, help='')
 parser.add_argument('--goon', action='store_true', help='Train from zero or Continue last training.' )
 parser.add_argument('--hard_eval', type=bool, default=False)
+parser.add_argument('--disentangle', type=bool, default=False)
 
 ## Training details
 parser.add_argument('--max_epoch', type=int, default=200, help='Maximum number of epochs')
@@ -118,10 +119,10 @@ if args.eval == True:
 
 print('Reading data ...')
 start_time = time.time()
-trainLoader = DatasetLoader(args.train_list, nPerEpoch=args.nTrainPerEpoch, maxQueueSize=30, **vars(args))
-valLoader = DatasetLoader(args.verify_list, nPerEpoch=args.nTestPerEpoch, evalmode=True, **vars(args))
-# trainLoader = MyDataLoader(args.train_list, args.nBatchSize)
-# valLoader = MyDataLoader(args.verify_list, args.nBatchSize, not args.hard_eval)
+# trainLoader = DatasetLoader(args.train_list, nPerEpoch=args.nTrainPerEpoch, maxQueueSize=30, **vars(args))
+# valLoader = DatasetLoader(args.verify_list, nPerEpoch=args.nTestPerEpoch, evalmode=True, **vars(args))
+trainLoader = MyDataLoader(args.train_list, args.nBatchSize)
+valLoader = MyDataLoader(args.verify_list, args.nBatchSize, not args.hard_eval)
 end_time = time.time()
 print('Reading done. Cost %.0f seconds.'%(end_time-start_time))
 
@@ -134,8 +135,8 @@ while (1):
 
 	loss, trainacc = s.train_network(trainLoader, evalmode=False, alpI=args.alphaI, alpC=args.alphaC)
 	valloss, valacc = s.train_network(valLoader, evalmode=True)
-
-	s.disentangle_step(trainLoader)
+	if args.disentangle:
+		s.disentangle_step(trainLoader)
 	print(time.strftime("%Y-%m-%d %H:%M:%S"), "%s: IT %d, LR %f, TACC %2.2f, TLOSS %f, VACC %2.2f, VLOSS %f\n"%(
 		args.save_path, it, max(clr), trainacc, loss, valacc, valloss))
 	scorefile.write(

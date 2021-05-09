@@ -31,8 +31,10 @@ def cosine_similarity(x, y):
 	return similiarity
 
 
-S = SyncNet(model="models.SyncNetModelFBank", maxFrames=40, learning_rate=0.001, temporal_stride=2)
-S.loadParameters("data/exp_04.model")
+S = SyncNet(model="models.SyncNetModelFBank", maxFrames=30, learning_rate=0.001, temporal_stride=2)
+modelpath = "data/exp09.model"
+print('Loading model from \'%s\''%modelpath)
+S.loadParameters(modelpath)
 S.eval()
 
 root_dir = '/data2/Downloads/wav'
@@ -137,12 +139,29 @@ def veri_eval(threshold):
 	tpr = tp*100/(tp+fn)
 	fpr = fp*100/(tn+fp)
 	fnr = fn*100/(tp+fn)
-	print('ACC: %.3f%%    TPR: %.3f%%    FPR: %.3f%%    FNR: %.3f%%'%(acc, tpr, fpr, fnr))
+	# print('ACC: %.3f%%    TPR: %.3f%%    FPR: %.3f%%    FNR: %.3f%%'%(acc, tpr, fpr, fnr))
+	return fpr, fnr
+
+
+def bisearch(l, r):
+	m = (l+r)/2
+	fpr, fnr = veri_eval(m)
+	print('Threshold: %.4f   ACC: %.3f%%    FPR: %.3f%%    FNR: %.3f%%'%(m, 100-fpr, fpr, fnr))
+	if abs(fnr-fpr)<0.01:
+		return
+	if fnr>fpr:
+		bisearch(l, m)
+	else:
+		bisearch(m, r)
 
 
 # exp03: 等错误率 FPR==FNR==35.7% 阈值为 0.833
 # exp04: 等错误率 FPR==FNR==35.2% 阈值为 0.816
-for i in range(0, 10):
-	threshold = 0.81+(i/1000)
-	print('Threshold:%.3f'%threshold)
-	veri_eval(threshold)
+# exp06: 等错误率 FPR==FNR==28.69% 阈值为 0.4597
+# exp09: 等错误率 FPR==FNR==31.95% 阈值为 0.4486
+# exp10: 等错误率 FPR==FNR==32.38% 阈值为 0.5698
+# for i in range(0, 10):
+# 	threshold = 0.8+(i/100)
+# 	print('Threshold:%.3f'%threshold)
+# 	veri_eval(threshold)
+bisearch(0, 1)
