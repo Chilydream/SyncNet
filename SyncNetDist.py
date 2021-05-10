@@ -54,9 +54,10 @@ class SyncNet(nn.Module):
 			dis_para.append(p)
 		dis_optim = optim.SGD(dis_para, lr=0.01, momentum=0.9, weight_decay=1e-5)
 		for data in loader:
-			data_v, data_a = data
+			data_v, data_a, id_label = data
 			# data_a 的形状是（batch，max_audio）
 			# data_v 的形状是（batch，3，max_frames，w，h）
+			# id_label 的形状是 （batch，1）
 
 			# ==================== FORWARD PASS ====================
 			out_a, out_A = self.__S__.forward_aud(data_a.cuda())

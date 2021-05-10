@@ -23,21 +23,26 @@ class MyDataset(Dataset):
 		self.eval_mode = eval_mode
 		self.maxFrames = maxFrames
 
-		people_set = set()
+		people_dict = dict()
+		people_cnt = 0
 		with open(dataset_file_name) as listfile:
 			while True:
 				line = listfile.readline()
 				if not line:
 					break
 				data = line.split()
+				people = data[0].strip().split('/')[-2]
 				if len(data) == 4:
 					if abs(int(data[3]))-abs(int(data[2]))>=maxFrames+4:
-						if eval_mode:
-							people = data[0].strip().split('/')[-2]
-							if people not in people_set:
+						if people not in people_dict.keys():
+							people_dict[people] = people_cnt
+							people_cnt += 1
+							data.append(people_cnt)
+							if eval_mode:
 								self.info_list.append(data)
-								people_set.add(people)
 						else:
+							data.append(people_dict[people])
+						if not eval_mode:
 							self.info_list.append(data)
 					else:
 						print('%s is too short'%(data[0]))
@@ -48,10 +53,9 @@ class MyDataset(Dataset):
 			mp4data = get_frames(mp4name, max_frames=self.maxFrames, start_frame=0)
 			wavdata = loadWAV(wavname, max_frames=self.maxFrames*4, start_frame=0)
 			mp4data, wavdata = mp4data.squeeze(), wavdata.squeeze()
-			self.data_list.append((mp4data, wavdata))
+			self.data_list.append((mp4data, wavdata, info[-1]))
 		self.ndata = len(self.data_list)
 		print('Evalmode %s - %d clips'%(self.eval_mode, len(self.data_list)))
-
 
 	def __getitem__(self, item):
 		return self.data_list[item]
