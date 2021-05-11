@@ -26,7 +26,7 @@ class LossScale(nn.Module):
 
 class SyncNet(nn.Module):
 
-	def __init__(self, model=None, maxFrames=200, learning_rate=0.01, nOut=1024, temporal_stride=1,
+	def __init__(self, model=None, maxFrames=200, learning_rate=0.0671, nOut=1024, temporal_stride=1,
 	             disentangle_step=10, **kwargs):
 		# nout指的是embedding的维数
 		super(SyncNet, self).__init__()

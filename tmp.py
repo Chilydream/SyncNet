@@ -8,5 +8,6 @@ from pytorch_metric_learning import losses
 
 from DatasetLoader import MyDataLoader
 
-loss_func = losses.NTXentLoss()
-valLoader = MyDataLoader("data/test.txt", 30, True)
+a = 0
+a -= 3+2
+print(a)
